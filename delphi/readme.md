@@ -1,1 +1,1 @@
-### Pasta contendo os conteúdos utilizados no curso de Delphi na Alura
+### Pasta com os conteúdos e materiais utilizados no curso de Delphi na Alura
