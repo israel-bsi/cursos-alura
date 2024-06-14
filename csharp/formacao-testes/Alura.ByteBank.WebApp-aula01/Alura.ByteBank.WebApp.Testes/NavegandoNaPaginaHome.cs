@@ -31,5 +31,46 @@ public class NavegandoNaPaginaHome
         // Assert
         Assert.Contains("Login", driver.PageSource);
         Assert.Contains("Home", driver.PageSource);
-    }   
+    }
+
+    [Fact]
+    public void ValidaLinkDeLoginNaHome()
+    {
+        // Arrange
+        IWebDriver driver = new ChromeDriver();
+        driver.Navigate().GoToUrl("https://localhost:44309");
+        var linkLogin = driver.FindElement(By.LinkText("Login"));
+
+        // Act
+        linkLogin.Click();
+
+        // Assert
+        Assert.Contains("img", driver.PageSource);
+    }
+
+    [Fact]
+    public void TentaAcessarAPaginaSemEstarLogado()
+    {
+        // Arrange
+        // Act
+        IWebDriver driver = new ChromeDriver();
+        driver.Navigate().GoToUrl("https://localhost:44309/Agencia/Index");
+
+        // Assert
+        Assert.Contains("401", driver.PageSource);
+    }
+
+    [Fact]
+    public void AcessaPaginaSemEstarLogadoVerificaURL()
+    {
+        // Arrange
+        // Act
+        IWebDriver driver = new ChromeDriver();
+        driver.Navigate().GoToUrl("https://localhost:44309/Agencia/Index");
+        
+
+        // Assert
+        Assert.Contains("https://localhost:44309/Agencia/Index", driver.Url);
+        Assert.Contains("401", driver.PageSource);
+    }
 }
