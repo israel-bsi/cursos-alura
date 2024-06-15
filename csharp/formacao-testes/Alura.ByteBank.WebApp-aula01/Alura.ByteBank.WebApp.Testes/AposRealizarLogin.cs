@@ -1,12 +1,11 @@
 ﻿using Alura.ByteBank.WebApp.Testes.PageObjects;
+using Alura.ByteBank.WebApp.Testes.Utilitarios;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using Xunit.Abstractions;
 
 namespace Alura.ByteBank.WebApp.Testes;
-public class AposRealizarLogin(ITestOutputHelper output)
+public class AposRealizarLogin(Gerenciador gerenciador) : IClassFixture<Gerenciador>
 {
-    private readonly ChromeDriver driver = new();
+    private readonly IWebDriver driver = gerenciador.driver;
     [Fact]
     public void AposRealizarLoginVerificaSeExisteOpcaoAgenciaMenu()
     {
@@ -26,12 +25,12 @@ public class AposRealizarLogin(ITestOutputHelper output)
     public void TentaRealizarLoginSemPreencherCampos()
     {
         // Arrange
-        driver.Navigate().GoToUrl("https://localhost:44309/UsuarioApps/Login");
+        var loginPO = new LoginPO(driver);
+        loginPO.Navegar("https://localhost:44309/UsuarioApps/Login");
 
-        var btnLogar = driver.FindElement(By.Id("btn-logar"));
-
-        // Act
-        btnLogar.Click();
+        //Act
+        loginPO.PreencherCampos("", "");
+        loginPO.BtnClick();
 
         // Assert
         Assert.Contains("The Email field is required.", driver.PageSource);
@@ -42,17 +41,12 @@ public class AposRealizarLogin(ITestOutputHelper output)
     public void TentaRealizarLoginComSenhaInvalida()
     {
         // Arrange
-        driver.Navigate().GoToUrl("https://localhost:44309/UsuarioApps/Login");
+        var loginPO = new LoginPO(driver);
+        loginPO.Navegar("https://localhost:44309/UsuarioApps/Login");
 
-        var login = driver.FindElement(By.Id("Email"));
-        var senha = driver.FindElement(By.Id("Senha"));
-        var btnLogar = driver.FindElement(By.Id("btn-logar"));
-
-        login.SendKeys("andre@email.com");
-        senha.SendKeys("senha010");
-
-        // Act
-        btnLogar.Click();
+        //Act
+        loginPO.PreencherCampos("andre@email.com", "senha010");
+        loginPO.BtnClick();
 
         // Assert
         Assert.Contains("Login", driver.PageSource);
@@ -62,15 +56,12 @@ public class AposRealizarLogin(ITestOutputHelper output)
     public void RealizarLoginAcessaMenuECadastraCliente()
     {
         // Arrange
-        driver.Navigate().GoToUrl("https://localhost:44309/UsuarioApps/Login");
+        var loginPO = new LoginPO(driver);
+        loginPO.Navegar("https://localhost:44309/UsuarioApps/Login");
 
-        var login = driver.FindElement(By.Name("Email"));
-        var senha = driver.FindElement(By.Name("Senha"));
-
-        login.SendKeys("andre@email.com");
-        senha.SendKeys("senha01");
-
-        driver.FindElement(By.Id("btn-logar")).Click();
+        //Act
+        loginPO.PreencherCampos("andre@email.com", "senha01");
+        loginPO.BtnClick();
 
         driver.FindElement(By.LinkText("Cliente")).Click();
 
@@ -98,15 +89,12 @@ public class AposRealizarLogin(ITestOutputHelper output)
     public void RealizarLoginAcessaListagemDeContas()
     {
         // Arrange
-        driver.Navigate().GoToUrl("https://localhost:44309/UsuarioApps/Login");
+        var loginPO = new LoginPO(driver);
+        loginPO.Navegar("https://localhost:44309/UsuarioApps/Login");
 
-        var login = driver.FindElement(By.Name("Email"));
-        var senha = driver.FindElement(By.Name("Senha"));
-
-        login.SendKeys("andre@email.com");
-        senha.SendKeys("senha01");
-
-        driver.FindElement(By.Id("btn-logar")).Click();
+        //Act
+        loginPO.PreencherCampos("andre@email.com", "senha01");
+        loginPO.BtnClick();
 
         driver.FindElement(By.Id("contacorrente")).Click();
 
@@ -119,5 +107,23 @@ public class AposRealizarLogin(ITestOutputHelper output)
 
         //Assert
         Assert.Contains("Voltar", driver.PageSource);
+    }
+
+    [Fact]
+    public void RealizarLoginAcessaListagemDeContasUsandoHomePO()
+    {
+        // Arrange
+        var loginPO = new LoginPO(driver);
+        loginPO.Navegar("https://localhost:44309/UsuarioApps/Login");
+
+        //Act
+        loginPO.PreencherCampos("andre@email.com", "senha01");
+        loginPO.BtnClick();
+
+        var homePO = new HomePO(driver);
+        homePO.LinkContaCorrenteClick();
+
+        //Assert
+        Assert.Contains("Adicionar Conta-Corrente", driver.PageSource);
     }
 }

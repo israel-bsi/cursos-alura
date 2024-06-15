@@ -5,12 +5,11 @@ namespace Alura.ByteBank.WebApp.Testes;
 
 public class NavegandoNaPaginaHome
 {
+    private readonly ChromeDriver driver = new();
     [Fact]
     public void CarregaPaginaHomeEVerificaTituloDaPagina()
     {
         // Arrange
-        IWebDriver driver = new ChromeDriver();
-
         // Act
         driver.Navigate().GoToUrl("https://localhost:44309");
 
@@ -23,21 +22,18 @@ public class NavegandoNaPaginaHome
     public void CarregaPaginaHomeEVerificaExistenciaLinkLoginEHome()
     {
         // Arrange
-        IWebDriver driver = new ChromeDriver();
-
         // Act
         driver.Navigate().GoToUrl("https://localhost:44309");
 
         // Assert
         Assert.Contains("Login", driver.PageSource);
         Assert.Contains("Home", driver.PageSource);
-    }
+    } 
 
     [Fact]
     public void ValidaLinkDeLoginNaHome()
     {
         // Arrange
-        IWebDriver driver = new ChromeDriver();
         driver.Navigate().GoToUrl("https://localhost:44309");
         var linkLogin = driver.FindElement(By.LinkText("Login"));
 
@@ -53,7 +49,6 @@ public class NavegandoNaPaginaHome
     {
         // Arrange
         // Act
-        IWebDriver driver = new ChromeDriver();
         driver.Navigate().GoToUrl("https://localhost:44309/Agencia/Index");
 
         // Assert
@@ -65,7 +60,6 @@ public class NavegandoNaPaginaHome
     {
         // Arrange
         // Act
-        IWebDriver driver = new ChromeDriver();
         driver.Navigate().GoToUrl("https://localhost:44309/Agencia/Index");
         
 
